@@ -19,3 +19,10 @@ Options:
   -t, --today            Show disk to be used today
   -v, --version          Show version information
 ```
+## Example
+```bash
+./qlv --disk tepig --kg olympics -ir
+✅:Created directory /hd/tepig/qlever/wikidata_20250213
+✅:Started screen session qlever_wikidata_20250213.
+✅:Logging to /hd/tepig/qlever/wikidata_20250213/screen.log
+```
