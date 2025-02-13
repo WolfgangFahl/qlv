@@ -3,7 +3,9 @@
 # QLever Wikidata Backup and Indexing Script
 
 # default disk to use
-DISK=/hd/alpha
+DISK=/hd/gamma
+# knowledge graph to provide
+KG="wikidata"
 
 # Color definitions
 blue='\033[0;34m'
@@ -47,6 +49,7 @@ usage() {
   echo "  -d, --debug            Enable debug output"
   echo "  --disk [DISK]          select the disk to be used"
   echo "  -ir, --index-run       Run QLever wikidata indexing on today's disk"
+  echo "  --kg [KG]              Select the knowledge graph to process (default: wikidata)"
   echo "  -l, --list             List used paths"
   echo "  -p, --pull             Pull QLever Docker images"
   echo "  -qc, --qlever-control  setup qlever-control"
@@ -242,7 +245,7 @@ execute_index() {
 cd $dir
 exec > >(tee -a "$logfile") 2>&1
 echo "Starting QLever indexing process at \$(date)"
-qlever setup-config wikidata
+qlever setup-config $KG
 qlever get-data
 qlever index
 qlever start
@@ -288,6 +291,14 @@ while [[ "$#" -gt 0 ]]; do
       shift 
       ;;
     -ir|--index-run) create_and_run_index $DISK; exit 0 ;;
+    --kg)
+      if [ -n "$2" ]; then
+        KG="$2"
+      else
+        error "knowledge graph not specified."
+      fi
+      shift
+    ;;
     -l|--list) list_used_paths;;
     -p|--pull) pull_docker_images; exit 0 ;;
     -qc|--qlever-control) setup_qlever_control; exit 0 ;;
